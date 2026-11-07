@@ -1,5 +1,7 @@
-const { app, BrowserWindow, dialog, ipcMain } = require("electron");
+const { app, BrowserWindow, Menu, dialog, ipcMain } = require("electron");
 const path = require("node:path");
+
+Menu.setApplicationMenu(null);
 
 ipcMain.handle("dialog:select-folder", async (event) => {
     const window = BrowserWindow.fromWebContents(event.sender);
@@ -15,11 +17,18 @@ function createWindow() {
         width: 1280,
         height: 800,
         title: "AI Folder Organizer",
+        autoHideMenuBar: true,
         webPreferences: {
             preload: path.join(__dirname, "preload.cjs"),
             contextIsolation: true,
             nodeIntegration: false
         }
+    });
+    win.setMenu(null);
+    win.setMenuBarVisibility(false);
+    win.on("page-title-updated", (event) => {
+        event.preventDefault();
+        win.setTitle("AI Folder Organizer");
     });
 
     if (app.isPackaged) {
