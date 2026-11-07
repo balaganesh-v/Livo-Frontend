@@ -1,23 +1,18 @@
-import './index.css'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
+import ProtectedRoute from './routes/ProtectedRoute'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import DashboardPage from './pages/DashboardPage'
+import ChatPage from './pages/ChatPage'
 
-function App() {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 text-white flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-5xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-          AI Folder Organizer
-        </h1>
-
-        <p className="mt-5 text-lg text-slate-300">
-          Intelligent file management assistant
-        </p>
-
-        <button className="mt-8 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-semibold shadow-lg shadow-blue-900/30 hover:from-blue-500 hover:to-purple-500 transition">
-          Get Started
-        </button>
-      </div>
-    </div>
-  )
+export default function App() {
+  return <BrowserRouter><AuthProvider><Routes>
+    <Route path="/" element={<Navigate to="/login" replace/>}/>
+    <Route path="/login" element={<ProtectedRoute guestOnly><LoginPage/></ProtectedRoute>}/>
+    <Route path="/register" element={<ProtectedRoute guestOnly><RegisterPage/></ProtectedRoute>}/>
+    <Route path="/dashboard" element={<ProtectedRoute><DashboardPage/></ProtectedRoute>}/>
+    <Route path="/chat" element={<ProtectedRoute><ChatPage/></ProtectedRoute>}/>
+    <Route path="*" element={<Navigate to="/login" replace/>}/>
+  </Routes></AuthProvider></BrowserRouter>
 }
-
-export default App
